@@ -12,12 +12,21 @@ def main():
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = []
 
+    # Initialize sessionAdvisor if it doesn't exist
+    if "sessionAdvisor" not in st.session_state:
+        st.session_state.sessionAdvisor = ChatSession(gpt_name='Advisor')
+        st.session_state.sessionAdvisor.inject(
+            line="You are a financial advisor at a bank. Start the conversation by inquiring about the user's financial goals. If the user mentions a specific financial goal or issue, acknowledge it and offer to help. Be attentive to the user's needs and goals. ",
+            role="user"
+        )
+        st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
+
     # Display chat messages from history on app rerun
     for message in st.session_state.chat_history:
         if message["role"] == "user":
-            st.markdown(f"User: {message['content']}", unsafe_allow_html=True)
+            st.markdown(f"User: {message['content']}")
         else:
-            st.markdown(f"Bot: {message['content']}", unsafe_allow_html=True)
+            st.markdown(f"Bot: {message['content']}")
 
     # Accept user input
     user_input = st.text_input("Type your message here...")
@@ -26,18 +35,6 @@ def main():
     if st.button("Send"):
         # Add the user's message to the chat history
         st.session_state.chat_history.append({"role": "user", "content": user_input})
-
-        # Update the chat session with the user's input
-        if "sessionAdvisor" not in st.session_state:
-            # Initialize the AdvisorGPT if it doesn't exist in session_state
-            st.session_state.sessionAdvisor = ChatSession(gpt_name='Advisor')
-
-            # Instruct GPT to become a financial advisor.
-            st.session_state.sessionAdvisor.inject(
-                line="You are a financial advisor at a bank. Start the conversation by inquiring about the user's financial goals. If the user mentions a specific financial goal or issue, acknowledge it and offer to help. Be attentive to the user's needs and goals. ",
-                role="user"
-            )
-            st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
 
         # Update the chat session with the user's input
         st.session_state.sessionAdvisor.chat(user_input=user_input, verbose=False)
@@ -53,9 +50,8 @@ def main():
         # Clear the chat history to start a new conversation
         st.session_state.chat_history = []
 
-        # Instruct GPT to become a financial advisor.
+        # Reinitialize sessionAdvisor for a new conversation
         st.session_state.sessionAdvisor = ChatSession(gpt_name='Advisor')
-
         st.session_state.sessionAdvisor.inject(
             line="You are a financial advisor at a bank. Start the conversation by inquiring about the user's financial goals. If the user mentions a specific financial goal or issue, acknowledge it and offer to help. Be attentive to the user's needs and goals. ",
             role="user"
