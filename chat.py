@@ -48,6 +48,12 @@ def main():
         # Display the latest response
         st.markdown(f"Bot: {advisor_response}")
 
+        # Clear the user input field after the response is generated
+        user_input = ""  # Reset the user_input variable
+
+    # Display the input field
+    user_input = st.text_input("Type your message here...", value=user_input)
+
     # Create a button to start a new conversation
     if st.button("New Chat"):
         # Clear the chat history to start a new conversation
