@@ -38,7 +38,12 @@ def main():
         st.session_state.chat_history.append({"role": "assistant", "content": advisor_response})
         chat_messages.append({"role": "assistant", "message": advisor_response})
 
-    st.chat(chat_messages)
+    # Display the conversation
+    for chat_message in chat_messages:
+        if chat_message["role"] == "user":
+            st.text(f"User: {chat_message['message']}")
+        else:
+            st.text(f"Bot: {chat_message['message']}")
 
     # Create buttons for starting a new conversation and exiting the current one
     if st.button("New Chat"):
