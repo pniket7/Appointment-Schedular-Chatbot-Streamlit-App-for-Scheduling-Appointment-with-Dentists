@@ -22,11 +22,8 @@ def main():
         st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
 
     # Display chat messages from history on app rerun
-    for message in st.session_state.chat_history:
-        if message["role"] == "user":
-            st.markdown(f"User: {message['content']}")
-        else:
-            st.markdown(f"Bot: {message['content']}")
+    chat_history = st.session_state.chat_history
+    st.chat(chat_history)
 
     # Accept user input
     user_input = st.text_input("Type your message here...")
@@ -34,7 +31,7 @@ def main():
     # Create a button to send the user input
     if st.button("Send"):
         # Add the user's message to the chat history
-        st.session_state.chat_history.append({"role": "user", "content": user_input})
+        chat_history.append({"role": "user", "content": user_input})
 
         # Update the chat session with the user's input
         st.session_state.sessionAdvisor.chat(user_input=user_input, verbose=False)
@@ -43,7 +40,7 @@ def main():
         advisor_response = st.session_state.sessionAdvisor.messages[-1]['content'] if st.session_state.sessionAdvisor.messages else ""
 
         # Add the chatbot's response to the chat history
-        st.session_state.chat_history.append({"role": "bot", "content": advisor_response})
+        chat_history.append({"role": "bot", "content": advisor_response})
 
     # Create a button to start a new conversation
     if st.button("New Chat"):
