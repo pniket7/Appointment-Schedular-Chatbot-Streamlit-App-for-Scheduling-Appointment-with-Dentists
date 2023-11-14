@@ -8,12 +8,11 @@ def main():
     # Load the OpenAI API key from Streamlit secrets
     openai.api_key = st.secrets["api_key"]
 
-    # Create a text area for user input with a unique key
-    user_input = st.text_area("Enter your question:", key="user_input")
+    # Create a Streamlit chat input widget for user input with a unique key
+    user_input = st.chat_input("User:")
 
-    # Create a button to send the user input
-    if st.button("Send"):
-        # Check if the chat session exists in session_state
+    # Create a Streamlit button with a unique key to send the user input
+    if st.button("Send", key="send_button"):
         if "sessionAdvisor" not in st.session_state:
             # Initialize the AdvisorGPT if it doesn't exist in session_state
             st.session_state.sessionAdvisor = ChatSession(gpt_name='Advisor')
@@ -28,18 +27,18 @@ def main():
         # Update the chat session with the user's input
         st.session_state.sessionAdvisor.chat(user_input=user_input, verbose=False)
 
-    # Get the chat history, which includes the chatbot's response
-    chat_history = st.session_state.sessionAdvisor.messages
+        # Get the chat history, which includes the chatbot's response
+        chat_history = st.session_state.sessionAdvisor.messages
 
-    # Display the chat history
-    for chat in chat_history:
-        if chat['role'] == 'user':
-            st.markdown(f"**User:** {chat['content']}", unsafe_allow_html=True)
-        else:
-            st.markdown(f"**Advisor:** {chat['content']}", unsafe_allow_html=True)
+        # Extract the chatbot's response from the last message in the history
+        advisor_response = chat_history[-1]['content'] if chat_history else ""
+
+        # Display the chatbot's response with text wrapping
+        with st.chat_message("Advisor:"):
+            st.write(advisor_response)
 
     # Create a button to start a new conversation
-    if st.button("New Chat"):
+    if st.button("New Chat", key="new_chat_button"):
         if "sessionAdvisor" in st.session_state:
             # Remove the existing sessionAdvisor from session_state
             del st.session_state.sessionAdvisor
@@ -49,7 +48,7 @@ def main():
         user_input = ""
 
     # Create a button to exit the current conversation
-    if st.button("Exit Chat"):
+    if st.button("Exit Chat", key="exit_chat_button"):
         if "sessionAdvisor" in st.session_state:
             # Remove the existing sessionAdvisor from session_state to exit the chat
             del st.session_state.sessionAdvisor
