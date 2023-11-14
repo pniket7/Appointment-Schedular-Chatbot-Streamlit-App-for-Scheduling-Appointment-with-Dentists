@@ -49,7 +49,7 @@ def main():
         st.markdown(f"Bot: {advisor_response}")
 
         # Clear the user input field after the response is generated
-        user_input = ""  # Reset the user_input variable
+        st.text_input("Type your message here...", value="", key="unique_key")
 
     # Create a button to start a new conversation
     if st.button("New Chat"):
