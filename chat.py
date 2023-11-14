@@ -61,12 +61,14 @@ def main():
 
         # Display the chat window
         with st.container():
-            for message in chat_history:
+            for index, message in enumerate(chat_history):
                 role = message['role']
                 content = message['content']
                 if role == 'user':
                     st.markdown(f'<div class="user-msg">{content}</div>', unsafe_allow_html=True)
                 elif role == 'assistant':
+                    if index == 0:  # Display the initial message only if it's the first bot message
+                        continue
                     st.markdown(f'<div class="bot-msg">{content}</div>', unsafe_allow_html=True)
 
     # Create a button to start a new conversation
