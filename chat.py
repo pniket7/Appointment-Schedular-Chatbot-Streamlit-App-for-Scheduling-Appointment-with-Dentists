@@ -28,24 +28,16 @@ def main():
         else:
             st.markdown(f"Bot: {message['content']}")
 
-    # Create a text area widget and store its value in the session state
-    if 'user_input' not in st.session_state:
-        st.session_state.user_input = ''
-
-    # Function to update the session state
-    def submit():
-        st.session_state.user_input = st.session_state.widget
-
     # Accept user input
-    st.text_area("Type your message here...", key="widget", height=100, value=st.session_state.user_input, on_change=submit)
+    user_input = st.text_input("Type your message here...", key="user_input")
 
     # Create a button to send the user input
     if st.button("Send"):
         # Add the user's message to the chat history
-        st.session_state.chat_history.append({"role": "user", "content": st.session_state.user_input})
+        st.session_state.chat_history.append({"role": "user", "content": user_input})
 
         # Update the chat session with the user's input
-        st.session_state.sessionAdvisor.chat(user_input=st.session_state.user_input, verbose=False)
+        st.session_state.sessionAdvisor.chat(user_input=user_input, verbose=False)
 
         # Get the chatbot's response from the last message in the history
         advisor_response = st.session_state.sessionAdvisor.messages[-1]['content'] if st.session_state.sessionAdvisor.messages else ""
@@ -55,6 +47,13 @@ def main():
 
         # Display the latest response
         st.markdown(f"Bot: {advisor_response}")
+
+        # Clear the user input field
+        st.session_state.user_input = ""
+
+    # Automatically clear the user input field after the user sends a message
+    if st.session_state.user_input != "":
+        st.session_state.user_input = ""
 
     # Create a button to start a new conversation
     if st.button("New Chat"):
