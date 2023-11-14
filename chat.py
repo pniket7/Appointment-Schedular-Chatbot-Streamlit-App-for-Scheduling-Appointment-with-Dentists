@@ -45,6 +45,9 @@ def main():
         # Add the chatbot's response to the chat history
         st.session_state.chat_history.append({"role": "bot", "content": advisor_response})
 
+        # Display the latest response
+        st.markdown(f"Bot: {advisor_response}")
+
     # Create a button to start a new conversation
     if st.button("New Chat"):
         # Clear the chat history to start a new conversation
