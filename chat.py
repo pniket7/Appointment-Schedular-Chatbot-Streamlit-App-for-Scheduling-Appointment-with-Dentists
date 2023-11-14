@@ -51,16 +51,12 @@ def main():
         if "sessionAdvisor" not in st.session_state:
             # Initialize the AdvisorGPT if it doesn't exist in session_state
             st.session_state.sessionAdvisor = ChatSession(gpt_name='Advisor')
-            st.session_state.sessionAdvisor.inject(
-                line="You are a financial advisor at a bank. Start the conversation by inquiring about the user's financial goals. If the user mentions a specific financial goal or issue, acknowledge it and offer to help. Be attentive to the user's needs and goals.",
-                role="user"
-            )
             st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
 
         # Update the chat session with the user's input
         st.session_state.sessionAdvisor.chat(user_input=user_input, verbose=False)
 
-        # Get the chat history
+        # Get the updated chat history
         chat_history = st.session_state.sessionAdvisor.messages
 
         # Display the chat window
@@ -88,4 +84,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
