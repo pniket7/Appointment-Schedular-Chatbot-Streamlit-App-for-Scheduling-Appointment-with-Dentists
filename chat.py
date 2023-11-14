@@ -15,9 +15,9 @@ def main():
     # Display chat messages from history on app rerun
     for message in st.session_state.chat_history:
         if message["role"] == "user":
-            st.chat_message(f"User: {message['content']}", side="right")
+            st.markdown(f"User: {message['content']}", unsafe_allow_html=True)
         else:
-            st.chat_message(f"Bot: {message['content']}", side="left")
+            st.markdown(f"Bot: {message['content']}", unsafe_allow_html=True)
 
     # Accept user input
     user_input = st.text_input("Type your message here...")
@@ -53,6 +53,15 @@ def main():
         # Clear the chat history to start a new conversation
         st.session_state.chat_history = []
 
+        # Instruct GPT to become a financial advisor.
+        st.session_state.sessionAdvisor = ChatSession(gpt_name='Advisor')
+
+        st.session_state.sessionAdvisor.inject(
+            line="You are a financial advisor at a bank. Start the conversation by inquiring about the user's financial goals. If the user mentions a specific financial goal or issue, acknowledge it and offer to help. Be attentive to the user's needs and goals. ",
+            role="user"
+        )
+        st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
+
     # Create a button to exit the current conversation
     if st.button("Exit Chat"):
         # Clear the chat history to exit the chat
@@ -60,4 +69,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
