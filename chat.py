@@ -21,13 +21,13 @@ def main():
         )
         st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
 
-    # Display chat messages using st.chat
+    # Display chat messages using a text area
     with st.expander("Chat"):
-        chat_history = [
-            {"role": message["role"], "text": message["content"]} 
+        chat_history = "\n".join([
+            f"User: {message['content']}" if message['role'] == 'user' else f"Bot: {message['content']}"
             for message in st.session_state.chat_history
-        ]
-        st.chat(chat_history)
+        ])
+        st.text_area("Chat History", value=chat_history, height=300)
 
     # Accept user input
     user_input = st.text_input("Type your message here...")
