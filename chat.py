@@ -51,8 +51,8 @@ def main():
         # Clear the user input field after the response is generated
         user_input = ""  # Reset the user_input variable
 
-    # Display the input field
-    user_input = st.text_input("Type your message here...", value=user_input)
+    # Display the input field with a unique key
+    user_input = st.text_input("Type your message here...", value=user_input, key="user_input_field")
 
     # Create a button to start a new conversation
     if st.button("New Chat"):
