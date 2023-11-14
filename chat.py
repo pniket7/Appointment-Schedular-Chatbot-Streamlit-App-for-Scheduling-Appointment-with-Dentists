@@ -24,12 +24,14 @@ def main():
     # Display chat messages from history on app rerun
     for message in st.session_state.chat_history:
         if message["role"] == "user":
-            st.markdown(f"User: {message['content']}")
+            with st.chat_message("user"):
+                st.write(f"User: {message['content']}")
         else:
-            st.markdown(f"Bot: {message['content']}")
+            with st.chat_message("bot"):
+                st.write(f"Bot: {message['content']}")
 
     # Accept user input
-    user_input = st.text_input("Type your message here...")
+    user_input = st.chat_input("Type your message here...")
 
     # Create a button to send the user input
     if st.button("Send"):
@@ -44,12 +46,6 @@ def main():
 
         # Add the chatbot's response to the chat history
         st.session_state.chat_history.append({"role": "bot", "content": advisor_response})
-
-    # Display the latest response
-    if len(st.session_state.chat_history) > 0:
-        latest_response = st.session_state.chat_history[-1]
-        if latest_response["role"] == "bot":
-            st.markdown(f"Bot: {latest_response['content']}")
 
     # Create a button to start a new conversation
     if st.button("New Chat"):
