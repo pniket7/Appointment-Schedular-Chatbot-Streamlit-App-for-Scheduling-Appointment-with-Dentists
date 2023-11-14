@@ -51,6 +51,10 @@ def main():
         if "sessionAdvisor" not in st.session_state:
             # Initialize the AdvisorGPT if it doesn't exist in session_state
             st.session_state.sessionAdvisor = ChatSession(gpt_name='Advisor')
+            st.session_state.sessionAdvisor.inject(
+                line="You are a financial advisor at a bank. Start the conversation by inquiring about the user's financial goals. If the user mentions a specific financial goal or issue, acknowledge it and offer to help. Be attentive to the user's needs and goals.",
+                role="user"
+            )
             st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
 
         # Update the chat session with the user's input
@@ -66,9 +70,7 @@ def main():
                 content = message['content']
                 if role == 'user':
                     st.markdown(f'<div class="user-msg">{content}</div>', unsafe_allow_html=True)
-                elif role == 'assistant':
-                    if index == 0:  # Display the initial message only if it's the first bot message
-                        continue
+                elif role == 'assistant' and index > 0:  # Skip displaying the initial guidance message
                     st.markdown(f'<div class="bot-msg">{content}</div>', unsafe_allow_html=True)
 
     # Create a button to start a new conversation
@@ -86,3 +88,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
