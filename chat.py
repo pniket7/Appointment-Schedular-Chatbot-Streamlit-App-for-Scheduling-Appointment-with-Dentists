@@ -26,6 +26,7 @@ def main():
         margin-bottom: 5px;
         width: 70%;
         float: left;
+        color: #000; /* Black text for user messages */
     }
     .bot-msg {
         background-color: #e6e6e6;
@@ -34,6 +35,7 @@ def main():
         margin-bottom: 5px;
         width: 70%;
         float: right;
+        color: #000; /* Black text for bot messages */
     }
     </style>
     """, unsafe_allow_html=True)
