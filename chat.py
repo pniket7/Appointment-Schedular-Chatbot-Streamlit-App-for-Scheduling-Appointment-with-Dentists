@@ -2,14 +2,6 @@ import openai
 import streamlit as st
 from utils import ChatSession
 
-def display_chat_history():
-    chat_history = st.session_state.chat_history[::-1]  # Reverse the order to display latest messages at the top
-    for message in chat_history:
-        if message["role"] == "user":
-            st.chat.send_message(message['content'], "USER")
-        else:
-            st.chat.send_message(message['content'], "BOT")
-
 def main():
     st.title('Financial Bank Advisor Chatbot')
 
@@ -30,7 +22,11 @@ def main():
         st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
 
     # Display chat messages from history on app rerun
-    display_chat_history()
+    for message in st.session_state.chat_history:
+        if message["role"] == "user":
+            st.markdown(f"User: {message['content']}")
+        else:
+            st.markdown(f"Bot: {message['content']}")
 
     # Accept user input
     user_input = st.text_input("Type your message here...")
@@ -49,9 +45,8 @@ def main():
         # Add the chatbot's response to the chat history
         st.session_state.chat_history.append({"role": "bot", "content": advisor_response})
 
-        # Display the latest response using the chat interface
-        if advisor_response:
-            st.chat.send_message(advisor_response, "BOT")
+        # Display the latest response
+        st.markdown(f"Bot: {advisor_response}")
 
     # Create a button to start a new conversation
     if st.button("New Chat"):
@@ -65,6 +60,11 @@ def main():
             role="user"
         )
         st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
+
+    # Create a button to exit the current conversation
+    if st.button("Exit Chat"):
+        # Clear the chat history to exit the chat
+        st.session_state.chat_history = []
 
 if __name__ == "__main__":
     main()
