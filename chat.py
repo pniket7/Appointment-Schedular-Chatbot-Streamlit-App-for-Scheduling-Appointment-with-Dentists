@@ -45,8 +45,11 @@ def main():
         # Add the chatbot's response to the chat history
         st.session_state.chat_history.append({"role": "bot", "content": advisor_response})
 
-        # Display the latest response
-        st.markdown(f"Bot: {advisor_response}")
+    # Display the latest response
+    if len(st.session_state.chat_history) > 0:
+        latest_response = st.session_state.chat_history[-1]
+        if latest_response["role"] == "bot":
+            st.markdown(f"Bot: {latest_response['content']}")
 
     # Create a button to start a new conversation
     if st.button("New Chat"):
@@ -60,11 +63,6 @@ def main():
             role="user"
         )
         st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
-
-    # Create a button to exit the current conversation
-    if st.button("Exit Chat"):
-        # Clear the chat history to exit the chat
-        st.session_state.chat_history = []
 
 if __name__ == "__main__":
     main()
