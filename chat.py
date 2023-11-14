@@ -23,10 +23,11 @@ def main():
 
     # Display chat messages using st.chat
     with st.expander("Chat"):
-        st.chat([
+        chat_history = [
             {"role": message["role"], "text": message["content"]} 
             for message in st.session_state.chat_history
-        ])
+        ]
+        st.chat(chat_history)
 
     # Accept user input
     user_input = st.text_input("Type your message here...")
