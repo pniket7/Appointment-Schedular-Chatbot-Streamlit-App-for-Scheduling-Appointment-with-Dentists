@@ -61,10 +61,16 @@ def main():
         )
         st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
 
+        # Display a message for a new conversation
+        st.markdown("New conversation started. You can now enter your query.")
+
     # Create a button to exit the current conversation
     if st.button("Exit Chat"):
         # Clear the chat history to exit the chat
         st.session_state.chat_history = []
+
+        # Display a message for exiting the chat
+        st.markdown("Chatbot session exited. You can start a new conversation by clicking the 'New Chat' button.")
 
 if __name__ == "__main__":
     main()
