@@ -85,12 +85,15 @@ def main():
         chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;">{chat_messages}</div>', unsafe_allow_html=True)
         st.markdown("Chatbot session exited. You can start a new conversation by clicking the 'New Chat' button.")
 
-    # Add custom CSS to change the background color of the user's chat box
+    # Add custom CSS to change the background color of the user's chat box and text color
     st.markdown(
         """
         <style>
         .stTextInput > div > div > div:nth-child(2) {
             background-color: #e6e6e6 !important;
+        }
+        .stTextInput > div > div > div:nth-child(2) input {
+            color: black !important;
         }
         </style>
         """,
