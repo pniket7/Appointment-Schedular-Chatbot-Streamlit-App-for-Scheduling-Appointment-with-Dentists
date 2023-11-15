@@ -29,7 +29,7 @@ def main():
             st.markdown(f"Bot: {message['content']}")
 
     # Accept user input
-    user_input = st.text_input("Type your message here...", key="user_input")
+    user_input = st.text_input("Type your message here...")
 
     # Create a button to send the user input
     if st.button("Send"):
@@ -47,13 +47,6 @@ def main():
 
         # Display the latest response
         st.markdown(f"Bot: {advisor_response}")
-
-        # Clear the user input field
-        st.session_state.user_input = ""
-
-    # Automatically clear the user input field after the user sends a message
-    if st.session_state.user_input != "":
-        st.session_state.user_input = ""
 
     # Create a button to start a new conversation
     if st.button("New Chat"):
