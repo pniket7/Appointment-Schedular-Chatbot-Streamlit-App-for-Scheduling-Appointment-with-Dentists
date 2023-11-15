@@ -36,7 +36,7 @@ def main():
             bot_container.markdown(f'<div style="border: 1px solid #ccc; border-radius: 5px; padding: 10px; margin: 5px 0;"><span style="font-weight: bold; color: green;">🤖 Bot:</span> {message["content"]}</div>', unsafe_allow_html=True)
 
     # Accept user input
-    user_input = st.text_input(f"Type your message here...{len(chat_history)}")
+    user_input = st.text_input(f"Type your message here...", key=f"user_input_{hash('user_input')}")
 
     # Create a button to send the user input
     if st.button("Send"):
@@ -66,7 +66,7 @@ def main():
             bot_container.markdown(f'<div style="border: 1px solid #ccc; border-radius: 5px; padding: 10px; margin: 5px 0;"><span style="font-weight: bold; color: green;">🤖 Bot:</span> {message["content"]}</div>', unsafe_allow_html=True)
 
     # Show user input field
-    st.text_input(f"Type your message here...{len(chat_history)}", value=user_input)
+    st.text_input(f"Type your message here...", value=user_input, key=f"user_input_display_{hash('user_input_display')}")
 
 if __name__ == "__main__":
     main()
