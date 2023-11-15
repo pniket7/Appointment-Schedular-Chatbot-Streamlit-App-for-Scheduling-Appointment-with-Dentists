@@ -32,7 +32,7 @@ def main():
     chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;">{chat_messages}</div>', unsafe_allow_html=True)
 
     # Accept user input
-    user_input = st.text_input("Type your message here...")
+    user_input = st.text_input("Type your message here...", key="user_input")
 
     # Create a button to send the user input
     if st.button("Send"):
@@ -91,8 +91,6 @@ def main():
         <style>
         .stTextInput > div > div > div:nth-child(2) {
             background-color: #e6e6e6 !important;
-        }
-        .stTextInput > div > div > div:nth-child(2) input {
             color: black !important;
         }
         </style>
