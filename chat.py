@@ -21,12 +21,17 @@ def main():
         )
         st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
 
+    # Create a container for displaying chat history
+    chat_container = st.container()
+
     # Display chat messages from history on app rerun
-    for message in st.session_state.chat_history:
-        if message["role"] == "user":
-            st.markdown("🧑 " + message['content'], unsafe_allow_html=True)
-        else:
-            st.markdown("🤖 " + message['content'], unsafe_allow_html=True)
+    with chat_container:
+        st.title("Chat History")
+        for message in st.session_state.chat_history:
+            if message["role"] == "user":
+                st.markdown("🧑 " + message['content'], unsafe_allow_html=True)
+            else:
+                st.markdown("🤖 " + message['content'], unsafe_allow_html=True)
 
     # Accept user input
     user_input = st.text_input("Type your message here...")
