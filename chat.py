@@ -36,24 +36,22 @@ def main():
             bot_container.markdown(f'<div style="border: 1px solid #ccc; border-radius: 5px; padding: 10px; margin: 5px 0;"><span style="font-weight: bold; color: green;">🤖 Bot:</span> {message["content"]}</div>', unsafe_allow_html=True)
 
     # Accept user input
-    user_input = st.text_input(f"Type your message here...", key=f"user_input_{hash('user_input')}")
+    user_input = st.text_input(f"Type your message here...")
 
     # Create a button to send the user input
     if st.button("Send"):
-        # Add the user's message to the chat history
-        chat_history.append({"role": "user", "content": user_input})
+        if user_input.strip():
+            # Add the user's message to the chat history
+            chat_history.append({"role": "user", "content": user_input})
 
-        # Update the chat session with the user's input
-        st.session_state.sessionAdvisor.chat(user_input=user_input, verbose=False)
+            # Update the chat session with the user's input
+            st.session_state.sessionAdvisor.chat(user_input=user_input, verbose=False)
 
-        # Get the chatbot's response from the last message in the session
-        advisor_response = st.session_state.sessionAdvisor.messages[-1]['content'] if st.session_state.sessionAdvisor.messages else ""
+            # Get the chatbot's response from the last message in the session
+            advisor_response = st.session_state.sessionAdvisor.messages[-1]['content'] if st.session_state.sessionAdvisor.messages else ""
 
-        # Add the chatbot's response to the chat history
-        chat_history.append({"role": "bot", "content": advisor_response})
-
-        # Clear user input after sending
-        user_input = ""
+            # Add the chatbot's response to the chat history
+            chat_history.append({"role": "bot", "content": advisor_response})
 
     # Store updated chat history in session state
     st.session_state.chat_history = chat_history
@@ -66,7 +64,7 @@ def main():
             bot_container.markdown(f'<div style="border: 1px solid #ccc; border-radius: 5px; padding: 10px; margin: 5px 0;"><span style="font-weight: bold; color: green;">🤖 Bot:</span> {message["content"]}</div>', unsafe_allow_html=True)
 
     # Show user input field
-    st.text_input(f"Type your message here...", value=user_input, key=f"user_input_display_{hash('user_input_display')}")
+    st.text_input(f"Type your message here...", value="", key="unique_user_input_key")
 
 if __name__ == "__main__":
     main()
