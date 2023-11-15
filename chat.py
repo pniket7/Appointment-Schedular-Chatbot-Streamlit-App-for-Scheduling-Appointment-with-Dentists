@@ -46,23 +46,27 @@ def main():
         # Update the chat session with the user's input
         st.session_state.sessionAdvisor.chat(user_input=user_input, verbose=False)
 
-        # Get the chatbot's response from the last message in the history
+        # Get the chatbot's response from the last message in the session
         advisor_response = st.session_state.sessionAdvisor.messages[-1]['content'] if st.session_state.sessionAdvisor.messages else ""
 
         # Add the chatbot's response to the chat history
         chat_history.append({"role": "bot", "content": advisor_response})
 
-    # Clear containers and display the updated messages
-    user_container.empty()
-    bot_container.empty()
+        # Clear user input after sending
+        user_input = ""
+
+    # Store updated chat history in session state
+    st.session_state.chat_history = chat_history
+
+    # Display updated chat messages
     for message in chat_history:
         if message["role"] == "user":
             user_container.markdown(f'<div style="border: 1px solid #ccc; border-radius: 5px; padding: 10px; margin: 5px 0;"><span style="font-weight: bold; color: blue;">🧑 User:</span> {message["content"]}</div>', unsafe_allow_html=True)
         else:
             bot_container.markdown(f'<div style="border: 1px solid #ccc; border-radius: 5px; padding: 10px; margin: 5px 0;"><span style="font-weight: bold; color: green;">🤖 Bot:</span> {message["content"]}</div>', unsafe_allow_html=True)
 
-    # Store updated chat history in session state
-    st.session_state.chat_history = chat_history
+    # Show user input field
+    st.text_input("Type your message here...", value=user_input)
 
 if __name__ == "__main__":
     main()
