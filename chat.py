@@ -21,16 +21,21 @@ def main():
         )
         st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
 
-    # Create a container for displaying chat history
-    chat_container = st.container()
+    # Create separate containers for user and bot messages
+    user_container = st.beta_container()
+    bot_container = st.beta_container()
 
     # Display chat messages from history on app rerun
-    with chat_container:
-        st.title("Chat History")
+    with user_container:
+        st.title("User Queries")
         for message in st.session_state.chat_history:
             if message["role"] == "user":
                 st.markdown("🧑 " + message['content'], unsafe_allow_html=True)
-            else:
+
+    with bot_container:
+        st.title("Bot Responses")
+        for message in st.session_state.chat_history:
+            if message["role"] == "bot":
                 st.markdown("🤖 " + message['content'], unsafe_allow_html=True)
 
     # Accept user input
@@ -51,6 +56,8 @@ def main():
         st.session_state.chat_history.append({"role": "bot", "content": advisor_response})
 
         # Display the latest response
+        st.beta_container()
+        st.title("Bot Responses")
         st.markdown("🤖 " + advisor_response, unsafe_allow_html=True)
 
     # Create a button to start a new conversation
@@ -67,6 +74,7 @@ def main():
         st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
 
         # Display a message for a new conversation
+        st.title("User Queries")
         st.markdown("New conversation started. You can now enter your query.")
 
     # Create a button to exit the current conversation
@@ -75,6 +83,7 @@ def main():
         st.session_state.chat_history = []
 
         # Display a message for exiting the chat
+        st.title("User Queries")
         st.markdown("Chatbot session exited. You can start a new conversation by clicking the 'New Chat' button.")
 
 if __name__ == "__main__":
