@@ -64,27 +64,5 @@ def main():
     # Store updated chat history in session state
     st.session_state.chat_history = chat_history
 
-    # Create a button to start a new conversation
-    if st.button("New Chat"):
-        # Clear the chat history to start a new conversation
-        st.session_state.chat_history = []
-        chat_history = []
-
-        # Reinitialize sessionAdvisor for a new conversation
-        st.session_state.sessionAdvisor = ChatSession(gpt_name='Advisor')
-        st.session_state.sessionAdvisor.inject(
-            line="You are a financial advisor at a bank. Start the conversation by inquiring about the user's financial goals. If the user mentions a specific financial goal or issue, acknowledge it and offer to help. Be attentive to the user's needs and goals. ",
-            role="user"
-        )
-        st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
-
-        # Display a message for a new conversation
-        st.markdown("New conversation started. You can now enter your query.")
-
-    # Create a button to exit the current conversation
-    if st.button("Exit Chat"):
-        # Display a message for exiting the chat
-        st.markdown("Chatbot session exited. You can start a new conversation by clicking the 'New Chat' button.")
-
 if __name__ == "__main__":
     main()
