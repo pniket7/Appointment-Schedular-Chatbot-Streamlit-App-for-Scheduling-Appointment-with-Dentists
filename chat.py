@@ -21,22 +21,15 @@ def main():
         )
         st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
 
-    # Create separate containers for user and bot messages
-    user_container = st.beta_container()
-    bot_container = st.beta_container()
-
     # Display chat messages from history on app rerun
-    with user_container:
-        st.title("User Queries")
-        for message in st.session_state.chat_history:
-            if message["role"] == "user":
-                st.markdown("🧑 " + message['content'], unsafe_allow_html=True)
-
-    with bot_container:
-        st.title("Bot Responses")
-        for message in st.session_state.chat_history:
-            if message["role"] == "bot":
-                st.markdown("🤖 " + message['content'], unsafe_allow_html=True)
+    chat_container = st.empty()
+    chat_messages = ""
+    for message in st.session_state.chat_history:
+        if message["role"] == "user":
+            chat_messages += f'<p style="background-color: #f2f2f2; padding: 10px; border-radius: 10px; float: left; clear: both;">🧑 {message["content"]}</p>'
+        else:
+            chat_messages += f'<p style="background-color: #0084ff; color: white; padding: 10px; border-radius: 10px; float: right; clear: both;">🤖 {message["content"]}</p>'
+    chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;">{chat_messages}</div>', unsafe_allow_html=True)
 
     # Accept user input
     user_input = st.text_input("Type your message here...")
@@ -56,9 +49,8 @@ def main():
         st.session_state.chat_history.append({"role": "bot", "content": advisor_response})
 
         # Display the latest response
-        st.beta_container()
-        st.title("Bot Responses")
-        st.markdown("🤖 " + advisor_response, unsafe_allow_html=True)
+        chat_messages += f'<p style="background-color: #0084ff; color: white; padding: 10px; border-radius: 10px; float: right; clear: both;">🤖 {advisor_response}</p>'
+        chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;">{chat_messages}</div>', unsafe_allow_html=True)
 
     # Create a button to start a new conversation
     if st.button("New Chat"):
@@ -74,7 +66,8 @@ def main():
         st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
 
         # Display a message for a new conversation
-        st.title("User Queries")
+        chat_messages = ""
+        chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;">{chat_messages}</div>', unsafe_allow_html=True)
         st.markdown("New conversation started. You can now enter your query.")
 
     # Create a button to exit the current conversation
@@ -83,7 +76,8 @@ def main():
         st.session_state.chat_history = []
 
         # Display a message for exiting the chat
-        st.title("User Queries")
+        chat_messages = ""
+        chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;">{chat_messages}</div>', unsafe_allow_html=True)
         st.markdown("Chatbot session exited. You can start a new conversation by clicking the 'New Chat' button.")
 
 if __name__ == "__main__":
