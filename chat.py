@@ -48,8 +48,13 @@ def main():
         # Add the chatbot's response to the chat history
         st.session_state.chat_history.append({"role": "bot", "content": advisor_response})
 
-        # Display the latest response
-        chat_messages += f'<p style="background-color: #0084ff; color: white; padding: 10px; border-radius: 10px; float: right; clear: both;">🤖 {advisor_response}</p>'
+        # Display the latest messages
+        chat_messages = ""
+        for message in st.session_state.chat_history:
+            if message["role"] == "user":
+                chat_messages += f'<p style="background-color: #f2f2f2; padding: 10px; border-radius: 10px; float: left; clear: both;">🧑 {message["content"]}</p>'
+            else:
+                chat_messages += f'<p style="background-color: #0084ff; color: white; padding: 10px; border-radius: 10px; float: right; clear: both;">🤖 {message["content"]}</p>'
         chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;">{chat_messages}</div>', unsafe_allow_html=True)
 
     # Create a button to start a new conversation
