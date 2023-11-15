@@ -21,12 +21,16 @@ def main():
         )
         st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
 
+    # Create containers for user and bot messages
+    user_container = st.empty()
+    bot_container = st.empty()
+
     # Display chat messages from history on app rerun
     for message in st.session_state.chat_history:
         if message["role"] == "user":
-            st.markdown("🧑 " + message['content'], unsafe_allow_html=True)
+            user_container.markdown(f'<div style="border: 1px solid #ccc; border-radius: 5px; padding: 10px; margin: 5px 0;"><span style="font-weight: bold; color: blue;">User:</span> {message["content"]}</div>', unsafe_allow_html=True)
         else:
-            st.markdown("🤖 " + message['content'], unsafe_allow_html=True)
+            bot_container.markdown(f'<div style="border: 1px solid #ccc; border-radius: 5px; padding: 10px; margin: 5px 0;"><span style="font-weight: bold; color: green;">Bot:</span> {message["content"]}</div>', unsafe_allow_html=True)
 
     # Accept user input
     user_input = st.text_input("Type your message here...")
@@ -45,8 +49,14 @@ def main():
         # Add the chatbot's response to the chat history
         st.session_state.chat_history.append({"role": "bot", "content": advisor_response})
 
-        # Display the latest response
-        st.markdown("🤖 " + advisor_response, unsafe_allow_html=True)
+    # Clear containers and display the updated messages
+    user_container.empty()
+    bot_container.empty()
+    for message in st.session_state.chat_history:
+        if message["role"] == "user":
+            user_container.markdown(f'<div style="border: 1px solid #ccc; border-radius: 5px; padding: 10px; margin: 5px 0;"><span style="font-weight: bold; color: blue;">User:</span> {message["content"]}</div>', unsafe_allow_html=True)
+        else:
+            bot_container.markdown(f'<div style="border: 1px solid #ccc; border-radius: 5px; padding: 10px; margin: 5px 0;"><span style="font-weight: bold; color: green;">Bot:</span> {message["content"]}</div>', unsafe_allow_html=True)
 
     # Create a button to start a new conversation
     if st.button("New Chat"):
