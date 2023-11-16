@@ -32,14 +32,33 @@ def main():
     chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;">{chat_messages}</div>', unsafe_allow_html=True)
 
     # Accept user input
-    with st.form(key='user_input_form'):
-        user_input = st.text_input("Type your message here...")
-        submitted = st.form_submit_button(label='Send')
+    user_input = st.text_input("Type your message here...", key="user_input")
 
-        # Submit the form when the enter key is pressed
-        if user_input and (submitted or st.session_state.enter_pressed):
+    # Check for Enter key press to send the message
+    if st.button("Send") or st.session_state.enter_pressed:
+        if st.session_state.enter_pressed or st.session_state.enter_pressed is None:
             st.session_state.enter_pressed = False
-            st.form_submit_button(label='Send')
+        else:
+            # Add the user's message to the chat history
+            st.session_state.chat_history.append({"role": "user", "content": user_input})
+
+            # Update the chat session with the user's input
+            st.session_state.sessionAdvisor.chat(user_input=user_input, verbose=False)
+
+            # Get the chatbot's response from the last message in the history
+            advisor_response = st.session_state.sessionAdvisor.messages[-1]['content'] if st.session_state.sessionAdvisor.messages else ""
+
+            # Add the chatbot's response to the chat history
+            st.session_state.chat_history.append({"role": "bot", "content": advisor_response})
+
+            # Display the latest messages
+            chat_messages = ""
+            for message in st.session_state.chat_history:
+                if message["role"] == "user":
+                    chat_messages += f'<p style="background-color: #9400D3; color: white; padding: 10px; border-radius: 10px; float: left; clear: both;">🧑 {message["content"]}</p>'
+                else:
+                    chat_messages += f'<p style="background-color: #0084ff; color: white; padding: 10px; border-radius: 10px; float: right; clear: both;">🤖 {message["content"]}</p>'
+            chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;">{chat_messages}</div>', unsafe_allow_html=True)
 
     # Create a button to start a new conversation
     if st.button("New Chat"):
@@ -58,16 +77,6 @@ def main():
         chat_messages = ""
         chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;">{chat_messages}</div>', unsafe_allow_html=True)
         st.markdown("New conversation started. You can now enter your query.")
-
-    # Create a button to exit the current conversation
-    if st.button("Exit Chat"):
-        # Clear the chat history to exit the chat
-        st.session_state.chat_history = []
-
-        # Display a message for exiting the chat
-        chat_messages = ""
-        chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;">{chat_messages}</div>', unsafe_allow_html=True)
-        st.markdown("Chatbot session exited. You can start a new conversation by clicking the 'New Chat' button.")
 
 if __name__ == "__main__":
     main()
