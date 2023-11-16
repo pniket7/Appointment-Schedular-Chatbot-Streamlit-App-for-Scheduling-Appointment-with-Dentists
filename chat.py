@@ -14,6 +14,9 @@ def main():
 
     # Initialize sessionAdvisor if it doesn't exist
     if "sessionAdvisor" not in st.session_state:
+        st.session_state.sessionAdvisor = None
+
+    if st.session_state.sessionAdvisor is None:
         st.session_state.sessionAdvisor = ChatSession(gpt_name='Advisor')
         st.session_state.sessionAdvisor.inject(
             line="You are a financial advisor at a bank. Start the conversation by inquiring about the user's financial goals. If the user mentions a specific financial goal or issue, acknowledge it and offer to help. Be attentive to the user's needs and goals. ",
@@ -23,13 +26,13 @@ def main():
 
     # Display chat messages from history on app rerun
     chat_container = st.empty()
-
-    # Display the latest messages
+    chat_messages = ""
     for message in st.session_state.chat_history:
         if message["role"] == "user":
-            st.markdown(f'<div style="background-color: #9400D3; color: white; padding: 10px; border-radius: 10px; float: left; clear: both;">🧑 {message["content"]}</div>', unsafe_allow_html=True)
+            chat_messages += f'<p style="background-color: #9400D3; color: white; padding: 10px; border-radius: 10px; float: left; clear: both;">🧑 {message["content"]}</p>'
         else:
-            st.markdown(f'<div style="background-color: #0084ff; color: white; padding: 10px; border-radius: 10px; float: right; clear: both;">🤖 {message["content"]}</div>', unsafe_allow_html=True)
+            chat_messages += f'<p style="background-color: #0084ff; color: white; padding: 10px; border-radius: 10px; float: right; clear: both;">🤖 {message["content"]}</p>'
+    chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;">{chat_messages}</div>', unsafe_allow_html=True)
 
     # Accept user input
     user_input = st.text_input("Type your message here...")
@@ -49,11 +52,13 @@ def main():
         st.session_state.chat_history.append({"role": "bot", "content": advisor_response})
 
         # Display the latest messages
+        chat_messages = ""
         for message in st.session_state.chat_history:
             if message["role"] == "user":
-                st.markdown(f'<div style="background-color: #9400D3; color: white; padding: 10px; border-radius: 10px; float: left; clear: both;">🧑 {message["content"]}</div>', unsafe_allow_html=True)
+                chat_messages += f'<p style="background-color: #9400D3; color: white; padding: 10px; border-radius: 10px; float: left; clear: both;">🧑 {message["content"]}</p>'
             else:
-                st.markdown(f'<div style="background-color: #0084ff; color: white; padding: 10px; border-radius: 10px; float: right; clear: both;">🤖 {message["content"]}</div>', unsafe_allow_html=True)
+                chat_messages += f'<p style="background-color: #0084ff; color: white; padding: 10px; border-radius: 10px; float: right; clear: both;">🤖 {message["content"]}</p>'
+        chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;">{chat_messages}</div>', unsafe_allow_html=True)
 
     # Create a button to start a new conversation
     if st.button("New Chat"):
@@ -69,12 +74,18 @@ def main():
         st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
 
         # Display a message for a new conversation
+        chat_messages = ""
+        chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;">{chat_messages}</div>', unsafe_allow_html=True)
         st.markdown("New conversation started. You can now enter your query.")
 
     # Create a button to exit the current conversation
     if st.button("Exit Chat"):
         # Clear the chat history to exit the chat
         st.session_state.chat_history = []
+
+        # Display a message for exiting the chat
+        chat_messages = ""
+        chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;">{chat_messages}</div>', unsafe_allow_html=True)
         st.markdown("Chatbot session exited. You can start a new conversation by clicking the 'New Chat' button.")
 
 if __name__ == "__main__":
