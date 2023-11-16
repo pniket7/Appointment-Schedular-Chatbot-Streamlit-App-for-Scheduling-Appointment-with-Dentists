@@ -26,7 +26,7 @@ def main():
     chat_messages = ""
     for message in st.session_state.chat_history:
         if message["role"] == "user":
-            chat_messages += f'<p style="background-color: #000000; color: white; padding: 10px; border-radius: 10px; float: left; clear: both;">🧑 {message["content"]}</p>'
+            chat_messages += f'<p style="background-color: #9400D3; color: white; padding: 10px; border-radius: 10px; float: left; clear: both;">🧑 {message["content"]}</p>'
         else:
             chat_messages += f'<p style="background-color: #0084ff; color: white; padding: 10px; border-radius: 10px; float: right; clear: both;">🤖 {message["content"]}</p>'
     chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;">{chat_messages}</div>', unsafe_allow_html=True)
@@ -52,7 +52,7 @@ def main():
         chat_messages = ""
         for message in st.session_state.chat_history:
             if message["role"] == "user":
-                chat_messages += f'<p style="background-color: #000000; color: white; padding: 10px; border-radius: 10px; float: left; clear: both;">🧑 {message["content"]}</p>'
+                chat_messages += f'<p style="background-color: #9400D3; color: white; padding: 10px; border-radius: 10px; float: left; clear: both;">🧑 {message["content"]}</p>'
             else:
                 chat_messages += f'<p style="background-color: #0084ff; color: white; padding: 10px; border-radius: 10px; float: right; clear: both;">🤖 {message["content"]}</p>'
         chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;">{chat_messages}</div>', unsafe_allow_html=True)
@@ -84,18 +84,6 @@ def main():
         chat_messages = ""
         chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;">{chat_messages}</div>', unsafe_allow_html=True)
         st.markdown("Chatbot session exited. You can start a new conversation by clicking the 'New Chat' button.")
-
-    # Add custom CSS to change the background color of the user's chat box
-    st.markdown(
-        """
-        <style>
-        .stTextInput > div > div > div:nth-child(2) {
-            background-color: #000000 !important;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
 
 if __name__ == "__main__":
     main()
