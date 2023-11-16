@@ -36,6 +36,8 @@ def main():
             chat_messages += f'<p style="background-color: #9400D3; color: white; padding: 10px; border-radius: 10px; float: left; clear: both;">🧑 {message["content"]}</p>'
         else:
             chat_messages += f'<p style="background-color: #0084ff; color: white; padding: 10px; border-radius: 10px; float: right; clear: both;">🤖 {message["content"]}</p>'
+    
+    # Render the chat messages
     chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;">{chat_messages}</div>', unsafe_allow_html=True)
 
     # Accept user input
@@ -55,6 +57,9 @@ def main():
         # Add the chatbot's response to the chat history
         st.session_state.chat_history.append({"role": "bot", "content": advisor_response})
 
+        # Clear the chat container
+        chat_container.empty()
+
         # Display the latest messages
         chat_messages = ""
         for message in st.session_state.chat_history:
@@ -62,6 +67,8 @@ def main():
                 chat_messages += f'<p style="background-color: #9400D3; color: white; padding: 10px; border-radius: 10px; float: left; clear: both;">🧑 {message["content"]}</p>'
             else:
                 chat_messages += f'<p style="background-color: #0084ff; color: white; padding: 10px; border-radius: 10px; float: right; clear: both;">🤖 {message["content"]}</p>'
+        
+        # Render the updated chat messages
         chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;">{chat_messages}</div>', unsafe_allow_html=True)
 
         # Set enter_pressed to True
@@ -84,9 +91,10 @@ def main():
         )
         st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
 
+        # Clear the chat container for the new conversation
+        chat_container.empty()
+
         # Display a message for a new conversation
-        chat_messages = ""
-        chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;">{chat_messages}</div>', unsafe_allow_html=True)
         st.markdown("New conversation started. You can now enter your query.")
 
     # Create a button to exit the current conversation
@@ -94,9 +102,10 @@ def main():
         # Clear the chat history to exit the chat
         st.session_state.chat_history = []
 
+        # Clear the chat container for exiting the chat
+        chat_container.empty()
+
         # Display a message for exiting the chat
-        chat_messages = ""
-        chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;">{chat_messages}</div>', unsafe_allow_html=True)
         st.markdown("Chatbot session exited. You can start a new conversation by clicking the 'New Chat' button.")
 
 if __name__ == "__main__":
