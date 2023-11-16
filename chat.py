@@ -26,7 +26,7 @@ def main():
     chat_messages = ""
     for message in st.session_state.chat_history:
         if message["role"] == "user":
-            chat_messages += f'<p style="background-color: #f2f2f2; padding: 10px; border-radius: 10px; float: left; clear: both;">🧑 {message["content"]}</p>'
+            chat_messages += f'<p style="background-color: #000000; color: white; padding: 10px; border-radius: 10px; float: left; clear: both;">🧑 {message["content"]}</p>'
         else:
             chat_messages += f'<p style="background-color: #0084ff; color: white; padding: 10px; border-radius: 10px; float: right; clear: both;">🤖 {message["content"]}</p>'
     chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;">{chat_messages}</div>', unsafe_allow_html=True)
@@ -52,7 +52,7 @@ def main():
         chat_messages = ""
         for message in st.session_state.chat_history:
             if message["role"] == "user":
-                chat_messages += f'<p style="background-color: #f2f2f2; padding: 10px; border-radius: 10px; float: left; clear: both;">🧑 {message["content"]}</p>'
+                chat_messages += f'<p style="background-color: #000000; color: white; padding: 10px; border-radius: 10px; float: left; clear: both;">🧑 {message["content"]}</p>'
             else:
                 chat_messages += f'<p style="background-color: #0084ff; color: white; padding: 10px; border-radius: 10px; float: right; clear: both;">🤖 {message["content"]}</p>'
         chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;">{chat_messages}</div>', unsafe_allow_html=True)
@@ -90,7 +90,7 @@ def main():
         """
         <style>
         .stTextInput > div > div > div:nth-child(2) {
-            background-color: #your_desired_color !important;
+            background-color: #000000 !important;
         }
         </style>
         """,
