@@ -32,10 +32,10 @@ def main():
     chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;">{chat_messages}</div>', unsafe_allow_html=True)
 
     # Accept user input
-    user_input = st.text_input("Type your message here...")
+    user_input = st.text_input("Type your message here...", key="user_input")
 
-    # Create a button to send the user input
-    if st.button("Send"):
+    # Create a button to send the user input or send on Enter key press
+    if st.button("Send") or st.text_input("Type your message here...", key="user_input", on_change=True, value="", key_presses=["Enter"]):
         # Add the user's message to the chat history
         st.session_state.chat_history.append({"role": "user", "content": user_input})
 
