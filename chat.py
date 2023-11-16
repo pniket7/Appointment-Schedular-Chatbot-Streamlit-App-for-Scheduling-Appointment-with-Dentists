@@ -24,23 +24,8 @@ def main():
         )
         st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
 
-    # Initialize enter_pressed if it doesn't exist
-    if "enter_pressed" not in st.session_state:
-        st.session_state.enter_pressed = False
-
     # Display chat messages from history on app rerun
     chat_container = st.empty()
-
-    # Display all messages in the chat history
-    chat_messages = ""
-    for message in st.session_state.chat_history:
-        if message["role"] == "user":
-            chat_messages += f'<p style="background-color: #9400D3; color: white; padding: 10px; border-radius: 10px; float: left; clear: both;">🧑 {message["content"]}</p>'
-        else:
-            chat_messages += f'<p style="background-color: #0084ff; color: white; padding: 10px; border-radius: 10px; float: right; clear: both;">🤖 {message["content"]}</p>'
-
-    # Display the entire chat history in the chat container
-    chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;">{chat_messages}</div>', unsafe_allow_html=True)
 
     # Accept user input
     user_input = st.text_input("Type your message here...")
@@ -99,16 +84,6 @@ def main():
         # Display a message for a new conversation
         chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;"></div>', unsafe_allow_html=True)
         st.markdown("New conversation started. You can now enter your query.")
-
-    # Create a button to exit the current conversation
-    if st.button("Exit Chat"):
-        # Clear the chat history to exit the chat
-        st.session_state.chat_history = []
-
-        # Clear the chat container when exiting the chat
-        chat_container.empty()
-        chat_container.markdown(f'<div style="border: 1px solid black; padding: 10px; height: 400px; overflow-y: scroll;"></div>', unsafe_allow_html=True)
-        st.markdown("Chatbot session exited. You can start a new conversation by clicking the 'New Chat' button.")
 
 if __name__ == "__main__":
     main()
