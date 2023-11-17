@@ -16,7 +16,6 @@ def display_matching_data(query):
         st.markdown(f"**Role:** {row['ROLE']}")
         st.markdown(f"**LinkedIn Profile:** [{row['NAME']}]({row['LinkedIn_Profile']})")
         st.markdown(f"**Responsibilities/Expertise:** {row['Responsibilities_Expertise']}")
-        
 
 def main():
     st.title('Financial Bank Advisor Chatbot')
@@ -31,6 +30,7 @@ def main():
     # Initialize sessionAdvisor if it doesn't exist
     if "sessionAdvisor" not in st.session_state:
         st.session_state.sessionAdvisor = ChatSession(gpt_name='Advisor')
+        # Inject initial information
         st.session_state.sessionAdvisor.inject(
             line="You are a CSV reader chatbot app. Answer user queries based on this information - The CSV file contains details of three employees: Senguttuvan, Jenifer Monica, and Poonkodi. Each employee has a respective LinkedIn profile, role, and a list of responsibilities/expertise. Here are the specifics:\n\nSenguttuvan:\nRole: Founder\nLinkedIn Profile: Senguttuvan's LinkedIn Profile\nResponsibilities/Expertise: Leadership, Research & Development, Chatbot Projects, Global Expansion, Analytical Abilities\n\nJenifer Monica:\nRole: Managing Director\nLinkedIn Profile: Jenifer Monica's LinkedIn Profile\nResponsibilities/Expertise: Technical and Managerial Expertise, Team Leadership, Project Management\n\nPoonkodi:\nRole: Technical Lead\nLinkedIn Profile: Poonkodi's LinkedIn Profile\nResponsibilities/Expertise: System Oversight, AI Chatbot Initiatives, AI/ML Solutions, Technical Stacks (Angular, PHP, Yii2, Laravel, MySQL, MongoDB, Slackbot, DevOps), AWS, Git\n\nPlease answer user queries based on this information. ",
             role="user"
@@ -71,6 +71,7 @@ def main():
 
         # Reinitialize sessionAdvisor for a new conversation
         st.session_state.sessionAdvisor = ChatSession(gpt_name='Advisor')
+        # Inject initial information
         st.session_state.sessionAdvisor.inject(
             line="You are a CSV reader chatbot app. Answer user queries based on this information - The CSV file contains details of three employees: Senguttuvan, Jenifer Monica, and Poonkodi. Each employee has a respective LinkedIn profile, role, and a list of responsibilities/expertise. Here are the specifics:\n\nSenguttuvan:\nRole: Founder\nLinkedIn Profile: Senguttuvan's LinkedIn Profile\nResponsibilities/Expertise: Leadership, Research & Development, Chatbot Projects, Global Expansion, Analytical Abilities\n\nJenifer Monica:\nRole: Managing Director\nLinkedIn Profile: Jenifer Monica's LinkedIn Profile\nResponsibilities/Expertise: Technical and Managerial Expertise, Team Leadership, Project Management\n\nPoonkodi:\nRole: Technical Lead\nLinkedIn Profile: Poonkodi's LinkedIn Profile\nResponsibilities/Expertise: System Oversight, AI Chatbot Initiatives, AI/ML Solutions, Technical Stacks (Angular, PHP, Yii2, Laravel, MySQL, MongoDB, Slackbot, DevOps), AWS, Git\n\nPlease answer user queries based on this information. ",
             role="user"
@@ -92,6 +93,24 @@ def main():
     if user_input.lower().startswith('show details for'):
         query = user_input.lower().replace('show details for', '').strip()
         display_matching_data(query)
+
+    # Integrate functionality from the added code snippet
+    st.title('Person Information Viewer')
+
+    # Dropdown to select a person
+    selected_person = st.selectbox('Select a person:', data['NAME'])
+
+    if st.button('Get Info'):
+        # Get the details of the selected person
+        person_details = data[data['NAME'] == selected_person].iloc[0]
+        role = person_details['ROLE']
+        linkedin_profile = person_details['LinkedIn_Profile']
+        responsibilities = person_details['Responsibilities_Expertise']
+
+        # Display the details
+        st.markdown(f"**Role:** {role}")
+        st.markdown(f"**LinkedIn Profile:** [{selected_person}]({linkedin_profile})")
+        st.markdown(f"**Responsibilities/Expertise:** {responsibilities}")
 
 if __name__ == "__main__":
     main()
