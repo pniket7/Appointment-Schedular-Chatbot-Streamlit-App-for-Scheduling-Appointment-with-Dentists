@@ -19,7 +19,21 @@ def main():
     if st.session_state.sessionAdvisor is None:
         st.session_state.sessionAdvisor = ChatSession(gpt_name='Advisor')
         st.session_state.sessionAdvisor.inject(
-            line="You are a financial advisor at a bank. Start the conversation by inquiring about the user's financial goals. If the user mentions a specific financial goal or issue, acknowledge it and offer to help. Be attentive to the user's needs and goals. ",
+            line="You are a CSV reader chatbot app. answer user queries based on this information-The CSV file contains details of three employees: Senguttuvan, Jenifer Monica, and Poonkodi. Each employee has a respective LinkedIn profile, role, and a list of responsibilities/expertise. Here are the specifics:
+
+Senguttuvan:
+Role: Founder
+LinkedIn Profile: Senguttuvan's LinkedIn Profile
+Responsibilities/Expertise: Leadership, Research & Development, Chatbot Projects, Global Expansion, Analytical Abilities
+Jenifer Monica:
+Role: Managing Director
+LinkedIn Profile: Jenifer Monica's LinkedIn Profile
+Responsibilities/Expertise: Technical and Managerial Expertise, Team Leadership, Project Management
+Poonkodi:
+Role: Technical Lead
+LinkedIn Profile: Poonkodi's LinkedIn Profile
+Responsibilities/Expertise: System Oversight, AI Chatbot Initiatives, AI/ML Solutions, Technical Stacks (Angular, PHP, Yii2, Laravel, MySQL, MongoDB, Slackbot, DevOps), AWS, Git
+Please answer user queries based on this information",
             role="user"
         )
         st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
