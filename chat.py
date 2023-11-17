@@ -18,7 +18,7 @@ def display_matching_data(query):
         st.markdown(f"**Responsibilities/Expertise:** {row['Responsibilities_Expertise']}")
 
 def main():
-    st.title('Person Information Viewer')
+    st.title('Database Reader Chatbot')
 
     # Dropdown to select a person
     selected_person = st.selectbox('Select a person:', data['NAME'])
@@ -35,7 +35,7 @@ def main():
         st.markdown(f"**LinkedIn Profile:** [{selected_person}]({linkedin_profile})")
         st.markdown(f"**Responsibilities/Expertise:** {responsibilities}")
 
-    st.title('Financial Bank Advisor Chatbot')
+    st.title('Conversation')
 
     # Load the OpenAI API key from Streamlit secrets
     openai.api_key = st.secrets["api_key"]
