@@ -1,6 +1,22 @@
 import openai
 import streamlit as st
+import pandas as pd
 from utils import ChatSession
+
+# Read the CSV file
+data = pd.read_csv('database.csv')
+
+def display_matching_data(query):
+    # Filter the data based on the user query
+    matching_data = data[data['Responsibilities_Expertise'].str.contains(query, case=False)]
+
+    # Display specific details from matching rows
+    for index, row in matching_data.iterrows():
+        st.markdown(f"**Name:** {row['NAME']}")
+        st.markdown(f"**Role:** {row['ROLE']}")
+        st.markdown(f"**LinkedIn Profile:** [{row['NAME']}]({row['LinkedIn_Profile']})")
+        st.markdown(f"**Responsibilities/Expertise:** {row['Responsibilities_Expertise']}")
+        
 
 def main():
     st.title('Financial Bank Advisor Chatbot')
@@ -17,7 +33,7 @@ def main():
         st.session_state.sessionAdvisor = ChatSession(gpt_name='Advisor')
         st.session_state.sessionAdvisor.inject(
             line="You are a CSV reader chatbot app. Answer user queries based on this information - The CSV file contains details of three employees: Senguttuvan, Jenifer Monica, and Poonkodi. Each employee has a respective LinkedIn profile, role, and a list of responsibilities/expertise. Here are the specifics:\n\nSenguttuvan:\nRole: Founder\nLinkedIn Profile: Senguttuvan's LinkedIn Profile\nResponsibilities/Expertise: Leadership, Research & Development, Chatbot Projects, Global Expansion, Analytical Abilities\n\nJenifer Monica:\nRole: Managing Director\nLinkedIn Profile: Jenifer Monica's LinkedIn Profile\nResponsibilities/Expertise: Technical and Managerial Expertise, Team Leadership, Project Management\n\nPoonkodi:\nRole: Technical Lead\nLinkedIn Profile: Poonkodi's LinkedIn Profile\nResponsibilities/Expertise: System Oversight, AI Chatbot Initiatives, AI/ML Solutions, Technical Stacks (Angular, PHP, Yii2, Laravel, MySQL, MongoDB, Slackbot, DevOps), AWS, Git\n\nPlease answer user queries based on this information. ",
-             role="user"
+            role="user"
         )
         st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
 
@@ -71,6 +87,11 @@ def main():
 
         # Display a message for exiting the chat
         st.markdown("Chatbot session exited. You can start a new conversation by clicking the 'New Chat' button.")
+
+    # Check if the user input is a query to display CSV details
+    if user_input.lower().startswith('show details for'):
+        query = user_input.lower().replace('show details for', '').strip()
+        display_matching_data(query)
 
 if __name__ == "__main__":
     main()
