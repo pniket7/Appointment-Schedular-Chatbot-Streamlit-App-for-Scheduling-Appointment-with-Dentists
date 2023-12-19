@@ -1,5 +1,6 @@
 import openai
 import streamlit as st
+from utils import ChatSession
 
 def main():
     st.title('Appointment Scheduler Chatbot')
