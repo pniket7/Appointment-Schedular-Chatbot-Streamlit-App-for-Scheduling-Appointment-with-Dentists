@@ -3,39 +3,9 @@ import streamlit as st
 import pandas as pd
 from utils import ChatSession
 
-# Read the CSV file
-data = pd.read_csv('database.csv')
-
-def display_matching_data(query):
-    # Filter the data based on the user query
-    matching_data = data[data['Responsibilities_Expertise'].str.contains(query, case=False)]
-
-    # Display specific details from matching rows
-    for index, row in matching_data.iterrows():
-        st.markdown(f"**Name:** {row['NAME']}")
-        st.markdown(f"**Role:** {row['ROLE']}")
-        st.markdown(f"**LinkedIn Profile:** [{row['NAME']}]({row['LinkedIn_Profile']})")
-        st.markdown(f"**Responsibilities/Expertise:** {row['Responsibilities_Expertise']}")
 
 def main():
     st.title('Database Reader Chatbot')
-
-    # Dropdown to select a person
-    selected_person = st.selectbox('Select a person:', data['NAME'])
-
-    if st.button('Get Info'):
-        # Get the details of the selected person
-        person_details = data[data['NAME'] == selected_person].iloc[0]
-        role = person_details['ROLE']
-        linkedin_profile = person_details['LinkedIn_Profile']
-        responsibilities = person_details['Responsibilities_Expertise']
-
-        # Display the details
-        st.markdown(f"**Role:** {role}")
-        st.markdown(f"**LinkedIn Profile:** [{selected_person}]({linkedin_profile})")
-        st.markdown(f"**Responsibilities/Expertise:** {responsibilities}")
-
-    st.title('Conversation')
 
     # Load the OpenAI API key from Streamlit secrets
     openai.api_key = st.secrets["api_key"]
