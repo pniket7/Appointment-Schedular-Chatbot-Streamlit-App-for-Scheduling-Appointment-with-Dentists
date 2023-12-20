@@ -155,52 +155,11 @@ def main():
         )
         st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
 
-    st.markdown(
-        """
-        <style>
-            .chat-container {
-                display: flex;
-                flex-direction: column;
-                width: 80%;
-                margin: 20px auto;
-                padding: 10px;
-                border-radius: 5px;
-                background-color: #f0f0f0;
-                overflow-y: scroll;
-                max-height: 400px;
-            }
-            .message {
-                padding: 8px;
-                margin-bottom: 6px;
-                border-radius: 5px;
-                max-width: 70%;
-            }
-            .user-message {
-                background-color: violet;
-                align-self: flex-start;
-            }
-            .bot-message {
-                background-color: darkgreen;
-                align-self: flex-end;
-            }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
-    chat_container = st.empty()
-
     for message in st.session_state.chat_history:
         if message["role"] == "user":
-            chat_container.markdown(
-                f'<div class="message user-message">🧑 {message["content"]}</div>', 
-                unsafe_allow_html=True
-            )
+            st.markdown("🧑 " + message['content'], unsafe_allow_html=True)
         else:
-            chat_container.markdown(
-                f'<div class="message bot-message">🤖 {message["content"]}</div>', 
-                unsafe_allow_html=True
-            )
+            st.markdown("🤖 " + message['content'], unsafe_allow_html=True)
 
     user_input = st.text_input("Type your message here...")
 
@@ -209,11 +168,7 @@ def main():
         st.session_state.sessionAdvisor.chat(user_input=user_input, verbose=False)
         advisor_response = st.session_state.sessionAdvisor.messages[-1]['content'] if st.session_state.sessionAdvisor.messages else ""
         st.session_state.chat_history.append({"role": "bot", "content": advisor_response})
-        chat_container.markdown(
-            f'<div class="message bot-message">🤖 {advisor_response}</div>', 
-            unsafe_allow_html=True
-        )
-
+        st.markdown("🤖 " + advisor_response, unsafe_allow_html=True)
 
     if st.button("New Chat"):
         st.session_state.chat_history = []
