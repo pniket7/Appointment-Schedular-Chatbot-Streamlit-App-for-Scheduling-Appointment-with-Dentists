@@ -155,11 +155,18 @@ def main():
         )
         st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
 
+    # Function to create a styled chat bubble using HTML and CSS
+    def styled_chat_bubble(content, role):
+        if role == "user":
+            return f'<div style="background-color: #DCF8C6; padding: 10px; border-radius: 15px; margin: 5px 20px;">🧑 {content}</div>'
+        else:
+            return f'<div style="background-color: #C7DDFF; padding: 10px; border-radius: 15px; margin: 5px 20px;">🤖 {content}</div>'
+
     for message in st.session_state.chat_history:
         if message["role"] == "user":
-            st.markdown("🧑 " + message['content'], unsafe_allow_html=True)
+            st.markdown(styled_chat_bubble(message['content'], "user"), unsafe_allow_html=True)
         else:
-            st.markdown("🤖 " + message['content'], unsafe_allow_html=True)
+            st.markdown(styled_chat_bubble(message['content'], "assistant"), unsafe_allow_html=True)
 
     user_input = st.text_input("Type your message here...")
 
@@ -168,7 +175,7 @@ def main():
         st.session_state.sessionAdvisor.chat(user_input=user_input, verbose=False)
         advisor_response = st.session_state.sessionAdvisor.messages[-1]['content'] if st.session_state.sessionAdvisor.messages else ""
         st.session_state.chat_history.append({"role": "bot", "content": advisor_response})
-        st.markdown("🤖 " + advisor_response, unsafe_allow_html=True)
+        st.markdown(styled_chat_bubble(advisor_response, "assistant"), unsafe_allow_html=True)
 
     if st.button("New Chat"):
         st.session_state.chat_history = []
