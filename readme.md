@@ -1,4 +1,4 @@
-﻿**Doctor Details**
+﻿**Sample Data of Doctor Details**
 |**Doctor Name**|**Service**|**Availability**|
 | :-: | :-: | :-: |
 |Dr. John Smith|Tooth Replacement|Monday: 10am-6pm, Tuesday: 10am-6pm, Friday: 10am-6pm|
