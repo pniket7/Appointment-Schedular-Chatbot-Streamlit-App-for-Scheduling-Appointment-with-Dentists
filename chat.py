@@ -155,7 +155,7 @@ def main():
         )
         st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
 
-    chat_container = st.beta_container()  # Create a container for chat messages
+    chat_container = st.container()  # Create a container for chat messages
 
     for message in st.session_state.chat_history:
         with chat_container:
