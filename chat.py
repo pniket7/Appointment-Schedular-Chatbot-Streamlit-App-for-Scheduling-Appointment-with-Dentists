@@ -155,11 +155,14 @@ def main():
         )
         st.session_state.sessionAdvisor.inject(line="Ok.", role="assistant")
 
+    chat_container = st.beta_container()  # Create a container for chat messages
+
     for message in st.session_state.chat_history:
-        if message["role"] == "user":
-            st.markdown("🧑 " + message['content'], unsafe_allow_html=True)
-        else:
-            st.markdown("🤖 " + message['content'], unsafe_allow_html=True)
+        with chat_container:
+            if message["role"] == "user":
+                st.markdown("🧑 " + message['content'], unsafe_allow_html=True)
+            else:
+                st.markdown("🤖 " + message['content'], unsafe_allow_html=True)
 
     user_input = st.text_input("Type your message here...")
 
@@ -168,7 +171,9 @@ def main():
         st.session_state.sessionAdvisor.chat(user_input=user_input, verbose=False)
         advisor_response = st.session_state.sessionAdvisor.messages[-1]['content'] if st.session_state.sessionAdvisor.messages else ""
         st.session_state.chat_history.append({"role": "bot", "content": advisor_response})
-        st.markdown("🤖 " + advisor_response, unsafe_allow_html=True)
+        with chat_container:  # Place bot's response within the chat container
+            st.markdown("🤖 " + advisor_response, unsafe_allow_html=True)
+
 
     if st.button("New Chat"):
         st.session_state.chat_history = []
