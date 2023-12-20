@@ -1,15 +1,10 @@
 import openai
-import os
 import streamlit as st
 import pickle
 import time
 import numpy as np
 import pandas as pd
 from typing import Optional, Union
-
-import openai
-import streamlit as st
-from utils import ChatSession
 
 def main():
     st.title('Appointment Scheduler Chatbot')
