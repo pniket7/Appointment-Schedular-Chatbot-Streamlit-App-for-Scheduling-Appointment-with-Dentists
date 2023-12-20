@@ -1,0 +1,136 @@
+{
+  "doctors": [
+    {
+      "name": "Dr. John Smith",
+      "service": "Tooth Replacement",
+      "availability": [
+        {
+          "day": "Monday",
+          "timings": "10am-6pm"
+        },
+        {
+          "day": "Tuesday",
+          "timings": "10am-6pm"
+        },
+        {
+          "day": "Friday",
+          "timings": "10am-6pm"
+        }
+      ]
+    },
+    {
+      "name": "Dr. Roger Blake",
+      "service": "Root Canal",
+      "availability": [
+        {
+          "day": "Wednesday",
+          "timings": "11am-3pm"
+        },
+        {
+          "day": "Friday",
+          "timings": "11am-3pm"
+        }
+      ]
+    },
+    {
+      "name": "Dr. Ryan Harris",
+      "service": "Tooth Cleaning",
+      "availability": [
+        {
+          "day": "Monday",
+          "timings": "9am-6pm"
+        },
+        {
+          "day": "Thursday",
+          "timings": "9am-6pm"
+        },
+        {
+          "day": "Saturday",
+          "timings": "9am-6pm"
+        }
+      ]
+    },
+    {
+      "name": "Dr. Millie James",
+      "service": "Tooth Replacement",
+      "availability": [
+        {
+          "day": "Friday",
+          "timings": "9am-7pm"
+        },
+        {
+          "day": "Saturday",
+          "timings": "9am-7pm"
+        }
+      ]
+    },
+    {
+      "name": "Dr. Crystal Miles",
+      "service": "Tooth Cleaning",
+      "availability": [
+        {
+          "day": "Wednesday",
+          "timings": "9am-3pm"
+        },
+        {
+          "day": "Friday",
+          "timings": "9am-3pm"
+        },
+        {
+          "day": "Saturday",
+          "timings": "9am-3pm"
+        }
+      ]
+    },
+    {
+      "name": "Dr. Jessica Brown",
+      "service": "Tooth Replacement",
+      "availability": [
+        {
+          "day": "Monday",
+          "timings": "8am-6pm"
+        },
+        {
+          "day": "Tuesday",
+          "timings": "8am-6pm"
+        },
+        {
+          "day": "Thursday",
+          "timings": "8am-6pm"
+        }
+      ]
+    },
+    {
+      "name": "Dr. Jenna Starc",
+      "service": "Root Canal",
+      "availability": [
+        {
+          "day": "Wednesday",
+          "timings": "10am-7pm"
+        },
+        {
+          "day": "Thursday",
+          "timings": "10am-7pm"
+        }
+      ]
+    },
+    {
+      "name": "Dr. David Ness",
+      "service": "Root Canal",
+      "availability": [
+        {
+          "day": "Thursday",
+          "timings": "8am-6pm"
+        },
+        {
+          "day": "Friday",
+          "timings": "8am-6pm"
+        },
+        {
+          "day": "Saturday",
+          "timings": "8am-6pm"
+        }
+      ]
+    }
+  ]
+}
