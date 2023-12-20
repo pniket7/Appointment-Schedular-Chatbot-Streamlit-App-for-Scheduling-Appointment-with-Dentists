@@ -169,21 +169,19 @@ def main():
                 overflow-y: scroll;
                 max-height: 400px;
             }
-            .user-message {
-                background-color: violet;
+            .message {
                 padding: 8px;
                 margin-bottom: 6px;
                 border-radius: 5px;
-                align-self: flex-start;
                 max-width: 70%;
+            }
+            .user-message {
+                background-color: violet;
+                align-self: flex-start;
             }
             .bot-message {
                 background-color: darkgreen;
-                padding: 8px;
-                margin-bottom: 6px;
-                border-radius: 5px;
                 align-self: flex-end;
-                max-width: 70%;
             }
         </style>
         """,
@@ -194,9 +192,15 @@ def main():
 
     for message in st.session_state.chat_history:
         if message["role"] == "user":
-            chat_container.markdown(f'<div class="user-message">🧑 {message["content"]}</div>', unsafe_allow_html=True)
+            chat_container.markdown(
+                f'<div class="message user-message">🧑 {message["content"]}</div>', 
+                unsafe_allow_html=True
+            )
         else:
-            chat_container.markdown(f'<div class="bot-message">🤖 {message["content"]}</div>', unsafe_allow_html=True)
+            chat_container.markdown(
+                f'<div class="message bot-message">🤖 {message["content"]}</div>', 
+                unsafe_allow_html=True
+            )
 
     user_input = st.text_input("Type your message here...")
 
@@ -205,7 +209,10 @@ def main():
         st.session_state.sessionAdvisor.chat(user_input=user_input, verbose=False)
         advisor_response = st.session_state.sessionAdvisor.messages[-1]['content'] if st.session_state.sessionAdvisor.messages else ""
         st.session_state.chat_history.append({"role": "bot", "content": advisor_response})
-        chat_container.markdown(f'<div class="bot-message">🤖 {advisor_response}</div>', unsafe_allow_html=True)
+        chat_container.markdown(
+            f'<div class="message bot-message">🤖 {advisor_response}</div>', 
+            unsafe_allow_html=True
+        )
 
 
     if st.button("New Chat"):
