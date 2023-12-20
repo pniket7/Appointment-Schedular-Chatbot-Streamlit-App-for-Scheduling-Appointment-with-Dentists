@@ -170,7 +170,7 @@ def main():
                 max-height: 400px;
             }
             .user-message {
-                background-color: #d9f1ff;
+                background-color: violet;
                 padding: 8px;
                 margin-bottom: 6px;
                 border-radius: 5px;
@@ -178,7 +178,7 @@ def main():
                 max-width: 70%;
             }
             .bot-message {
-                background-color: #e5ffd4;
+                background-color: darkgreen;
                 padding: 8px;
                 margin-bottom: 6px;
                 border-radius: 5px;
