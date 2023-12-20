@@ -18,7 +18,7 @@ def main():
         st.session_state.sessionAdvisor = ChatSession(gpt_name='Advisor')
         # Insert initial information for appointment scheduler
         st.session_state.sessionAdvisor.inject(
-            line="""You are an appointment scheduler chatbot app for scheduling user appointments with dentist doctors. Your main goal is to converse with the user and schedule an appointment for the user with the dentist in the week starting from 24 December, 2023 and ending on 30 December, 2023. The user should be able to get details from you about the doctor's name, availability, and services offered (root canal, teeth cleaning, etc.). After collecting the details from user and finalizing the day and date in the week starting from 24 December, 2023 and ending on 30 December, 2023, you should give a message to the user about their appointment confirmation and appointment details which includes any random specific time from the available hours of that particular doctor and the decided appointment date. Be brief in your responses. Proceed with follow-up questions based solely on the user's immediate response, maintaining a strictly sequential flow. Ask one question at a time, waiting for and responding to each user input individually. Ensure that each response from the advisor contains only a single query or request for information, refraining from posing multiple questions or requests within the same reply. Strickly avoid including phrases like-'Give me a moment to check' in your responses. Don't keep the user waiting. Keep asking follow up questions. This is the data in JSON format about the doctor details - 
+            line="""You are an appointment scheduler chatbot app for scheduling user appointments with dentist doctors. Your main goal is to converse with the user and schedule an appointment for the user with the dentist in the week starting from 24 December, 2023 and ending on 30 December, 2023. The user should be able to get details from you about the doctor's name, availability, and services offered (root canal, teeth cleaning, etc.). After collecting the details from user and finalizing the day and date in the week starting from 24 December, 2023 and ending on 30 December, 2023, you should give a message to the user about their appointment confirmation and appointment details which includes any random specific time from the available hours of that particular doctor and the decided appointment date. Be brief in your responses. Proceed with follow-up questions based solely on the user's immediate response, maintaining a strictly sequential flow. Ask one question at a time, waiting for and responding to each user input individually. Ensure that each response from the advisor contains only a single query or request for information, refraining from posing multiple questions or requests within the same reply. Don't keep the user waiting. Keep asking follow up questions. This is the data in JSON format about the doctor details - 
             {
               "doctors": [
                 {
@@ -185,7 +185,7 @@ def main():
         st.session_state.chat_history = []
         st.session_state.sessionAdvisor = ChatSession(gpt_name='Advisor')
         st.session_state.sessionAdvisor.inject(
-            line="""You are an appointment scheduler chatbot app for scheduling user appointments with dentist doctors. Your main goal is to converse with the user and schedule an appointment for the user with the dentist in the week starting from 24 December, 2023 and ending on 30 December, 2023. The user should be able to get details from you about the doctor's name, availability, and services offered (root canal, teeth cleaning, etc.). After collecting the details from user and finalizing the day and date in the week starting from 24 December, 2023 and ending on 30 December, 2023, you should give a message to the user about their appointment confirmation and appointment details which includes any random specific time from the available hours of that particular doctor and the decided appointment date. Be brief in your responses. Proceed with follow-up questions based solely on the user's immediate response, maintaining a strictly sequential flow. Ask one question at a time, waiting for and responding to each user input individually. Ensure that each response from the advisor contains only a single query or request for information, refraining from posing multiple questions or requests within the same reply. Strickly avoid including phrases like-'Give me a moment to check' in your responses. Don't keep the user waiting. Keep asking follow up questions. This is the data in JSON format about the doctor details  - 
+            line="""You are an appointment scheduler chatbot app for scheduling user appointments with dentist doctors. Your main goal is to converse with the user and schedule an appointment for the user with the dentist in the week starting from 24 December, 2023 and ending on 30 December, 2023. The user should be able to get details from you about the doctor's name, availability, and services offered (root canal, teeth cleaning, etc.). After collecting the details from user and finalizing the day and date in the week starting from 24 December, 2023 and ending on 30 December, 2023, you should give a message to the user about their appointment confirmation and appointment details which includes any random specific time from the available hours of that particular doctor and the decided appointment date. Be brief in your responses. Proceed with follow-up questions based solely on the user's immediate response, maintaining a strictly sequential flow. Ask one question at a time, waiting for and responding to each user input individually. Ensure that each response from the advisor contains only a single query or request for information, refraining from posing multiple questions or requests within the same reply. Don't keep the user waiting. Keep asking follow up questions. This is the data in JSON format about the doctor details  - 
             {
               "doctors": [
                 {
@@ -470,6 +470,35 @@ class ChatSession:
             message = msg['content']
             who = {'user': 'User: ', 'assistant': f'{self.gpt_name}: '}[msg['role']]
             print(who + message.strip() + '\n')
+
+@ErrorHandler
+def update_investor_profile(session, investor_profile: dict, questions: list[str], verbose: bool = False):
+
+    ask_for_these = [i for i in investor_profile if not investor_profile[i]]
+    n_limit = 20
+    temp_reply = openai.ChatCompletion.create(messages=session.messages.copy(), model='gpt-3.5-turbo').choices[0].message.content
+    for info_type in ask_for_these:
+        choices = [*map(lambda x: x.message.content, openai.ChatCompletion.create(messages=
+                                        session.messages +
+                                        [{"role": "assistant", "content": temp_reply}] +
+                                        [{"role": "user", "content": f'Do you know my {info_type} based on our conversation so far? Yes or no:'}],
+                                        model='gpt-3.5-turbo', n=n_limit, max_tokens=1).choices)]
+        if verbose:
+            print('1:')
+            print({i: round(choices.count(i) / len(choices), 2) for i in pd.unique(choices)})
+        if np.any([*map(lambda x: 'yes' in x.lower(), choices)]):
+            choices = [*map(lambda x: x.message.content, openai.ChatCompletion.create(messages=
+                                        session.messages +
+                                        [{"role": "assistant", "content": temp_reply}] +
+                                        [{"role": "user", "content": questions[info_type]}],
+                                        model='gpt-3.5-turbo', n=n_limit, max_tokens=1).choices)]
+            if verbose:
+                print('2:')
+                print({i: round(choices.count(i) / len(choices), 2) for i in pd.unique(choices)})
+            if np.any([*map(lambda x: 'yes' in x.lower(), choices)]):
+                investor_profile[info_type] = 'yes'
+            elif np.any([*map(lambda x: 'no' in x.lower(), choices)]):
+                investor_profile[info_type] = 'no'
 
 if __name__ == "__main__":
     main()
