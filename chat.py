@@ -158,7 +158,7 @@ def main():
     # Function to create a styled chat bubble using HTML and CSS
     def styled_chat_bubble(content, role):
         if role == "user":
-            return f'<div style="background-color: #000000; padding: 10px; border-radius: 15px; margin: 5px 20px;">🧑 {content}</div>'
+            return f'<div style="background-color: #0000FF; padding: 10px; border-radius: 15px; margin: 5px 20px;">🧑 {content}</div>'
         else:
             return f'<div style="background-color: #808080; padding: 10px; border-radius: 15px; margin: 5px 20px;">🤖 {content}</div>'
 
