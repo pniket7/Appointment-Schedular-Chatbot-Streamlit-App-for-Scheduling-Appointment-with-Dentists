@@ -160,7 +160,7 @@ def main():
         if role == "user":
             return f'<div style="background-color: #00008B; padding: 10px; border-radius: 15px; margin: 5px 20px;">🧑 {content}</div>'
         else:
-            return f'<div style="background-color: #808080; padding: 10px; border-radius: 15px; margin: 5px 20px;">🤖 {content}</div>'
+            return f'<div style="background-color: #006400; padding: 10px; border-radius: 15px; margin: 5px 20px;">🤖 {content}</div>'
 
     for message in st.session_state.chat_history:
         if message["role"] == "user":
