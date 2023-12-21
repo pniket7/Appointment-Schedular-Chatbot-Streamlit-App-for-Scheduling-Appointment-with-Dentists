@@ -369,6 +369,7 @@ class ChatSession:
         self.gpt_name = gpt_name
 
     def chat(self, user_input: Optional[Union[dict, str]] = None, verbose=True, *args, **kwargs):
+        """ Say something to the model and get a reply. """
 
         completion_index = 0 if kwargs.get('logprobs', False) or kwargs.get('model') == 'text-davinci-003' else 1
 
@@ -386,12 +387,25 @@ class ChatSession:
         if verbose:
             self.__call__(1)
 
+    def display_probas(self, reply_index):
+        """ Display probabilities of each word for the given reply by the model. """
+
+        history = self.history[reply_index]
+        assert not history.completion_index
+        probas = history.logprobs.top_logprobs
+        return pd.concat([
+                pd.DataFrame(data=np.concatenate([[list(k.keys()), np.exp2(list(k.values())).round(2)]]).T,
+                             columns=[str(i), f'{i}_proba'],
+                             index=[f'candidate_{j}' for j in range(len(probas[0]))]
+                            ) for i, k in enumerate(probas)], axis=1).T
+
     def inject(self, line, role):
+        """ Inject lines into the chat. """
 
         self.__log(message={"role": role, "content": line})
 
     def clear(self, k=None):
-    
+        """ Clears session. If provided, last k messages are cleared. """
         if k:
             self.messages = self.messages[:-k]
             self.history = self.history[:-k]
@@ -399,11 +413,13 @@ class ChatSession:
             self.__init__()
 
     def save(self, filename):
+        """ Saves the session to a file. """
 
         with open(filename, 'wb') as f:
             pickle.dump(self, f)
 
     def load(self, filename):
+        """ Loads up the session. """
 
         with open(filename, 'rb') as f:
             temp = pickle.load(f)
@@ -411,6 +427,7 @@ class ChatSession:
             self.history = temp.history
 
     def merge(self, filename):
+        """ Merges another session from a file with this one. """
 
         with open(filename, 'rb') as f:
             temp = pickle.load(f)
@@ -418,6 +435,7 @@ class ChatSession:
             self.history += temp.history
 
     def __get_input(self, user_input, log: bool = False):
+        """ Converts user input to the desired format. """
 
         if user_input is None:
             user_input = input("> ")
@@ -429,6 +447,7 @@ class ChatSession:
 
     @ErrorHandler
     def __get_reply(self, completion, log: bool = False, *args, **kwargs):
+        """ Calls the model. """
         reply = completion.create(*args, **kwargs).choices[0]
         if log:
             if hasattr(reply, 'message'):
@@ -444,12 +463,42 @@ class ChatSession:
             self.history.append(history)
 
     def __call__(self, k: Optional[int] = None):
+        """ Display the full chat log or the last k messages. """
 
         k = len(self.messages) if k is None else k
         for msg in self.messages[-k:]:
             message = msg['content']
             who = {'user': 'User: ', 'assistant': f'{self.gpt_name}: '}[msg['role']]
             print(who + message.strip() + '\n')
+
+@ErrorHandler
+def update_investor_profile(session, investor_profile: dict, questions: list[str], verbose: bool = False):
+
+    ask_for_these = [i for i in investor_profile if not investor_profile[i]]
+    n_limit = 20
+    temp_reply = openai.ChatCompletion.create(messages=session.messages.copy(), model='gpt-3.5-turbo').choices[0].message.content
+    for info_type in ask_for_these:
+        choices = [*map(lambda x: x.message.content, openai.ChatCompletion.create(messages=
+                                        session.messages +
+                                        [{"role": "assistant", "content": temp_reply}] +
+                                        [{"role": "user", "content": f'Do you know my {info_type} based on our conversation so far? Yes or no:'}],
+                                        model='gpt-3.5-turbo', n=n_limit, max_tokens=1).choices)]
+        if verbose:
+            print('1:')
+            print({i: round(choices.count(i) / len(choices), 2) for i in pd.unique(choices)})
+        if np.any([*map(lambda x: 'yes' in x.lower(), choices)]):
+            choices = [*map(lambda x: x.message.content, openai.ChatCompletion.create(messages=
+                                        session.messages +
+                                        [{"role": "assistant", "content": temp_reply}] +
+                                        [{"role": "user", "content": questions[info_type]}],
+                                        model='gpt-3.5-turbo', n=n_limit, max_tokens=1).choices)]
+            if verbose:
+                print('2:')
+                print({i: round(choices.count(i) / len(choices), 2) for i in pd.unique(choices)})
+            if np.any([*map(lambda x: 'yes' in x.lower(), choices)]):
+                investor_profile[info_type] = 'yes'
+            elif np.any([*map(lambda x: 'no' in x.lower(), choices)]):
+                investor_profile[info_type] = 'no'
 
 if __name__ == "__main__":
     main()
