@@ -433,31 +433,5 @@ class ChatSession:
             self.__log(user_input)
         return user_input
 
-    @ErrorHandler
-    def __get_reply(self, completion, log: bool = False, *args, **kwargs):
-        """ Calls the model. """
-        reply = completion.create(*args, **kwargs).choices[0]
-        if log:
-            if hasattr(reply, 'message'):
-                self.__log(message=reply.message, history=reply)
-            else:
-                self.__log(message={"role": 'assistant', "content": reply.text}, history=reply)
-        return reply
-
-    def __log(self, message: dict, history=None):
-        self.messages.append(message)
-        if history is not None:
-            assert isinstance(history, dict)
-            self.history.append(history)
-
-    def __call__(self, k: Optional[int] = None):
-        """ Display the full chat log or the last k messages. """
-
-        k = len(self.messages) if k is None else k
-        for msg in self.messages[-k:]:
-            message = msg['content']
-            who = {'user': 'User: ', 'assistant': f'{self.gpt_name}: '}[msg['role']]
-            print(who + message.strip() + '\n')
-
 if __name__ == "__main__":
     main()
