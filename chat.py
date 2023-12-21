@@ -369,7 +369,6 @@ class ChatSession:
         self.gpt_name = gpt_name
 
     def chat(self, user_input: Optional[Union[dict, str]] = None, verbose=True, *args, **kwargs):
-        """ Say something to the model and get a reply. """
 
         completion_index = 0 if kwargs.get('logprobs', False) or kwargs.get('model') == 'text-davinci-003' else 1
 
@@ -388,12 +387,11 @@ class ChatSession:
             self.__call__(1)
 
     def inject(self, line, role):
-        """ Inject lines into the chat. """
 
         self.__log(message={"role": role, "content": line})
 
     def clear(self, k=None):
-        """ Clears session. If provided, last k messages are cleared. """
+    
         if k:
             self.messages = self.messages[:-k]
             self.history = self.history[:-k]
@@ -401,13 +399,11 @@ class ChatSession:
             self.__init__()
 
     def save(self, filename):
-        """ Saves the session to a file. """
 
         with open(filename, 'wb') as f:
             pickle.dump(self, f)
 
     def load(self, filename):
-        """ Loads up the session. """
 
         with open(filename, 'rb') as f:
             temp = pickle.load(f)
@@ -415,7 +411,6 @@ class ChatSession:
             self.history = temp.history
 
     def merge(self, filename):
-        """ Merges another session from a file with this one. """
 
         with open(filename, 'rb') as f:
             temp = pickle.load(f)
@@ -423,7 +418,6 @@ class ChatSession:
             self.history += temp.history
 
     def __get_input(self, user_input, log: bool = False):
-        """ Converts user input to the desired format. """
 
         if user_input is None:
             user_input = input("> ")
@@ -435,7 +429,6 @@ class ChatSession:
 
     @ErrorHandler
     def __get_reply(self, completion, log: bool = False, *args, **kwargs):
-        """ Calls the model. """
         reply = completion.create(*args, **kwargs).choices[0]
         if log:
             if hasattr(reply, 'message'):
