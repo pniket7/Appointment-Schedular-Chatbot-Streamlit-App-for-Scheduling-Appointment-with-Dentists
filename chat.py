@@ -387,17 +387,7 @@ class ChatSession:
         if verbose:
             self.__call__(1)
 
-    def display_probas(self, reply_index):
-        """ Display probabilities of each word for the given reply by the model. """
 
-        history = self.history[reply_index]
-        assert not history.completion_index
-        probas = history.logprobs.top_logprobs
-        return pd.concat([
-                pd.DataFrame(data=np.concatenate([[list(k.keys()), np.exp2(list(k.values())).round(2)]]).T,
-                             columns=[str(i), f'{i}_proba'],
-                             index=[f'candidate_{j}' for j in range(len(probas[0]))]
-                            ) for i, k in enumerate(probas)], axis=1).T
 
     def inject(self, line, role):
         """ Inject lines into the chat. """
