@@ -387,6 +387,51 @@ class ChatSession:
         if verbose:
             self.__call__(1)
 
+    def inject(self, line, role):
+        """ Inject lines into the chat. """
+
+        self.__log(message={"role": role, "content": line})
+
+    def clear(self, k=None):
+        """ Clears session. If provided, last k messages are cleared. """
+        if k:
+            self.messages = self.messages[:-k]
+            self.history = self.history[:-k]
+        else:
+            self.__init__()
+
+    def save(self, filename):
+        """ Saves the session to a file. """
+
+        with open(filename, 'wb') as f:
+            pickle.dump(self, f)
+
+    def load(self, filename):
+        """ Loads up the session. """
+
+        with open(filename, 'rb') as f:
+            temp = pickle.load(f)
+            self.messages = temp.messages
+            self.history = temp.history
+
+    def merge(self, filename):
+        """ Merges another session from a file with this one. """
+
+        with open(filename, 'rb') as f:
+            temp = pickle.load(f)
+            self.messages += temp.messages
+            self.history += temp.history
+
+    def __get_input(self, user_input, log: bool = False):
+        """ Converts user input to the desired format. """
+
+        if user_input is None:
+            user_input = input("> ")
+        if not isinstance(user_input, dict):
+            user_input = {"role": 'user', "content": user_input}
+        if log:
+            self.__log(user_input)
+        return user_input
 
     @ErrorHandler
     def __get_reply(self, completion, log: bool = False, *args, **kwargs):
