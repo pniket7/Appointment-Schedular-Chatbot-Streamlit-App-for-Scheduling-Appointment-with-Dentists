@@ -451,7 +451,6 @@ class ChatSession:
             self.history.append(history)
 
     def __call__(self, k: Optional[int] = None):
-        """ Display the full chat log or the last k messages. """
 
         k = len(self.messages) if k is None else k
         for msg in self.messages[-k:]:
