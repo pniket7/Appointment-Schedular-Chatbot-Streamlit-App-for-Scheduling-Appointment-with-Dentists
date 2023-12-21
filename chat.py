@@ -387,6 +387,64 @@ class ChatSession:
         if verbose:
             self.__call__(1)
 
+    def display_probas(self, reply_index):
+        """ Display probabilities of each word for the given reply by the model. """
+
+        history = self.history[reply_index]
+        assert not history.completion_index
+        probas = history.logprobs.top_logprobs
+        return pd.concat([
+                pd.DataFrame(data=np.concatenate([[list(k.keys()), np.exp2(list(k.values())).round(2)]]).T,
+                             columns=[str(i), f'{i}_proba'],
+                             index=[f'candidate_{j}' for j in range(len(probas[0]))]
+                            ) for i, k in enumerate(probas)], axis=1).T
+
+    def inject(self, line, role):
+        """ Inject lines into the chat. """
+
+        self.__log(message={"role": role, "content": line})
+
+    def clear(self, k=None):
+        """ Clears session. If provided, last k messages are cleared. """
+        if k:
+            self.messages = self.messages[:-k]
+            self.history = self.history[:-k]
+        else:
+            self.__init__()
+
+    def save(self, filename):
+        """ Saves the session to a file. """
+
+        with open(filename, 'wb') as f:
+            pickle.dump(self, f)
+
+    def load(self, filename):
+        """ Loads up the session. """
+
+        with open(filename, 'rb') as f:
+            temp = pickle.load(f)
+            self.messages = temp.messages
+            self.history = temp.history
+
+    def merge(self, filename):
+        """ Merges another session from a file with this one. """
+
+        with open(filename, 'rb') as f:
+            temp = pickle.load(f)
+            self.messages += temp.messages
+            self.history += temp.history
+
+    def __get_input(self, user_input, log: bool = False):
+        """ Converts user input to the desired format. """
+
+        if user_input is None:
+            user_input = input("> ")
+        if not isinstance(user_input, dict):
+            user_input = {"role": 'user', "content": user_input}
+        if log:
+            self.__log(user_input)
+        return user_input
+
     @ErrorHandler
     def __get_reply(self, completion, log: bool = False, *args, **kwargs):
         """ Calls the model. """
